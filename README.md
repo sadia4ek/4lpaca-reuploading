@@ -2,7 +2,7 @@
 
 ## Reuploaded by rubik2019
 
-- Telegram: [t.me/goveci](https://t.me/goveci)
+- [Telegram](//t.me/goveci)
 - Discord: rubik2019_offc
 
 ## Big Thanks To!
