@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Airflow UI — документация</title>
+<style>
+:root{
+  --bg:#0c0c0c; --panel:#141414; --panel2:#1a1a1a; --border:#2b2b2b;
+  --text:#e8e8e8; --muted:#9a9a9a; --accent:#a380d8; --code-bg:#111214;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f7f6fa; --panel:#ffffff; --panel2:#f0eef7; --border:#e1ddec;
+    --text:#1d1b23; --muted:#6b6775; --accent:#7a4fc0; --code-bg:#f3f1f8;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.55;}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;}
+code{background:var(--code-bg);padding:.1em .4em;border-radius:4px;font-size:.9em;border:1px solid var(--border)}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:.85em;line-height:1.5;}
+pre code{border:0;background:none;padding:0}
+
+.layout{display:flex;min-height:100%;}
+.sidebar{
+  width:250px;flex:0 0 250px;background:var(--panel);
+  border-right:1px solid var(--border);padding:20px 14px;
+  position:sticky;top:0;align-self:flex-start;height:100vh;height:100dvh;
+  overflow-y:auto;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 16px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.brand-dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.brand h1{font-size:16px;margin:0}
+.brand span{color:var(--muted);font-size:11px;display:block}
+.nav-group{margin-bottom:6px}
+.nav-title{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 8px 4px}
+.nav-link{display:block;padding:6px 8px;border-radius:6px;color:var(--text);font-size:13.5px}
+.nav-link:hover{background:var(--panel2);text-decoration:none}
+
+main{flex:1;min-width:0;padding:36px clamp(18px,4vw,56px);max-width:900px}
+h2{font-size:24px;margin:48px 0 10px;padding-top:8px;border-top:1px solid var(--border)}
+h2:first-of-type{border-top:0;margin-top:0}
+h3{font-size:17px;margin:26px 0 8px;color:var(--text)}
+h3 code{font-size:.95em}
+p{color:var(--text)}
+.lead{color:var(--muted);font-size:15px}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--border);color:var(--muted);margin-left:6px}
+table{border-collapse:collapse;width:100%;margin:10px 0 18px;font-size:13.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+td code{white-space:nowrap}
+.note{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:10px 14px;margin:14px 0;font-size:13.5px;color:var(--muted)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:760px){.layout{flex-direction:column}.sidebar{position:relative;height:auto;width:100%;flex-basis:auto;border-right:0;border-bottom:1px solid var(--border)}.grid-2{grid-template-columns:1fr}}
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div><h1>Airflow UI</h1><span>v1.2 · Roblox Lua GUI</span></div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Начало</div>
+      <a class="nav-link" href="#overview">Обзор</a>
+      <a class="nav-link" href="#quickstart">Быстрый старт</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Окно</div>
+      <a class="nav-link" href="#init">Airflow:Init</a>
+      <a class="nav-link" href="#tabs">Вкладки (Tab)</a>
+      <a class="nav-link" href="#sections">Секции (Section)</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Элементы</div>
+      <a class="nav-link" href="#label">Label</a>
+      <a class="nav-link" href="#button">Button</a>
+      <a class="nav-link" href="#toggle">Toggle</a>
+      <a class="nav-link" href="#slider">Slider</a>
+      <a class="nav-link" href="#keybind">Keybind</a>
+      <a class="nav-link" href="#textbox">Textbox</a>
+      <a class="nav-link" href="#colorpicker">ColorPicker</a>
+      <a class="nav-link" href="#paragraph">Paragraph</a>
+      <a class="nav-link" href="#dropdown">Dropdown</a>
+      <a class="nav-link" href="#common-api">Общий API элемента</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-title">Прочее</div>
+      <a class="nav-link" href="#configs">FileManager (конфиги)</a>
+      <a class="nav-link" href="#notify">Уведомления</a>
+      <a class="nav-link" href="#drawlist">DrawList</a>
+      <a class="nav-link" href="#drawloader">DrawLoader</a>
+      <a class="nav-link" href="#icons">Иконки (Lucide)</a>
+      <a class="nav-link" href="#misc">Служебные функции</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <h2>Обзор</h2>
+      <p class="lead">Airflow — библиотека интерфейса для Roblox-экзекьюторов (автор 4lpaca, MIT). Позволяет
+      создавать окно с вкладками, элементами управления, всплывающими уведомлениями, сохранением конфигов и
+      отдельным «загрузчиком» (лоадером) для нескольких игр/версий.</p>
+      <div class="note">Все примеры — реальный Luau-код на основе исходника библиотеки. Названия переменных внутри
+      GUI генерируются случайно (<code>Airflow:RandomString()</code>), поэтому в примерах используется только
+      публичный API.</div>
+    </section>
+
+    <section id="quickstart">
+      <h2>Быстрый старт</h2>
+      <pre><code>local Airflow = loadstring(game:HttpGet("URL_ДО_AIRFLOW"))()
+
+local Window = Airflow:Init({
+    Name = "My Script",
+    Logo = "http://www.roblox.com/asset/?id=118752982916680",
+    Keybind = "Delete",      -- клавиша показать/скрыть
+    Hightlight = Color3.fromRGB(163, 128, 216),
+    Resizable = false,
+    UnlockMouse = false,
+    IconSize = 20,
+    Version = "1.0",         -- для проверки конфигов
+})
+
+local Tab = Window:DrawTab({ Name = "Main", Icon = "home" })
+
+Tab.Left:AddToggle({
+    Name = "God Mode",
+    Default = false,
+    Callback = function(value)
+        print("God mode:", value)
+    end,
+})</code></pre>
+    </section>
+
+    <section id="init">
+      <h2>Airflow:Init(config) <span class="badge">создаёт окно</span></h2>
+      <p>Создаёт главное окно и возвращает объект <code>Window</code>.</p>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"airflow"</code></td><td>Заголовок окна</td></tr>
+        <tr><td><code>Logo</code></td><td>string (asset id)</td><td>стандартный логотип</td><td>Иконка в заголовке / кнопке панели</td></tr>
+        <tr><td><code>Scale</code></td><td>UDim2</td><td>адаптивный по устройству</td><td>Размер окна</td></tr>
+        <tr><td><code>Hightlight</code></td><td>Color3</td><td>фиолетовый (163,128,216)</td><td>Акцентный цвет (обратите внимание на опечатку в имени поля)</td></tr>
+        <tr><td><code>Keybind</code></td><td>string / KeyCode</td><td><code>"Delete"</code></td><td>Клавиша открытия/закрытия окна</td></tr>
+        <tr><td><code>Resizable</code></td><td>boolean</td><td><code>false</code></td><td>Добавляет ручку изменения размера в правом нижнем углу</td></tr>
+        <tr><td><code>UnlockMouse</code></td><td>boolean</td><td><code>false</code></td><td>Модальность кнопок вкладок</td></tr>
+        <tr><td><code>IconSize</code></td><td>number</td><td>20</td><td>Размер иконки в заголовке</td></tr>
+        <tr><td><code>Version</code></td><td>string</td><td><code>"1.0"</code></td><td>Версия для валидации при загрузке конфигов</td></tr>
+      </table>
+
+      <h3>Методы Window</h3>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>Window:DrawTab(config)</code></td><td>Создаёт новую вкладку, возвращает <code>Tab</code></td></tr>
+        <tr><td><code>Window:GetConfigs()</code></td><td>Возвращает таблицу всех значений элементов по всем вкладкам</td></tr>
+        <tr><td><code>Window:GetTabFromKey(key)</code></td><td>Найти вкладку по ключу <code>"Имя_ID"</code></td></tr>
+        <tr><td><code>Window:SetKeybind(key)</code></td><td>Изменить клавишу открытия окна</td></tr>
+        <tr><td><code>Window:SetResizable(bool)</code></td><td>Включить/выключить возможность изменения размера</td></tr>
+        <tr><td><code>Window:GetButton()</code></td><td>Возвращает готовую кнопку для сторонней топ-бар панели (интеграция с Icon/TopBarApp)</td></tr>
+        <tr><td><code>Window:Update()</code></td><td>Пересчитать ширину заголовка после смены имени</td></tr>
+      </table>
+    </section>
+
+    <section id="tabs">
+      <h2>Вкладки — Window:DrawTab(config)</h2>
+      <table>
+        <tr><th>Поле</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>Название вкладки, по умолчанию <code>"Tab"</code></td></tr>
+        <tr><td><code>Icon</code></td><td>Имя иконки Lucide (без префикса <code>lucide-</code>), по умолчанию <code>"book"</code></td></tr>
+      </table>
+      <p>Возвращаемый <code>Tab</code> содержит две колонки — <code>Tab.Left</code> и <code>Tab.Right</code>,
+      каждая из которых сама является объектом элементов (см. раздел «Элементы»).</p>
+      <table>
+        <tr><th>Поле / метод</th><th>Описание</th></tr>
+        <tr><td><code>Tab.Left</code> / <code>Tab.Right</code></td><td>Левая/правая колонки — добавляйте элементы напрямую: <code>Tab.Left:AddToggle(...)</code></td></tr>
+        <tr><td><code>Tab:AddSection(config)</code></td><td>Создаёт группу элементов с подписью внутри колонки (см. ниже)</td></tr>
+        <tr><td><code>Tab:Disable(value, reason)</code></td><td>Блокирует вкладку и показывает текст причины</td></tr>
+        <tr><td><code>Tab.Disabled</code></td><td>boolean — текущее состояние блокировки</td></tr>
+      </table>
+    </section>
+
+    <section id="sections">
+      <h2>Секции — Tab:AddSection(config)</h2>
+      <table>
+        <tr><th>Поле</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>Заголовок секции, по умолчанию <code>"Section"</code></td></tr>
+        <tr><td><code>Position</code></td><td><code>"left"</code> или <code>"right"</code> — в какой колонке разместить</td></tr>
+      </table>
+      <pre><code>local Section = Tab:AddSection({ Name = "Combat", Position = "left" })
+Section:AddToggle({ Name = "Aimbot", Callback = function(v) end })</code></pre>
+      <p>Возвращает объект элементов — тот же интерфейс, что и <code>Tab.Left</code>/<code>Tab.Right</code>.</p>
+    </section>
+
+    <h2 id="elements-heading" style="margin-bottom:6px">Элементы</h2>
+    <p class="lead" style="margin-top:0">Добавляются через <code>Tab.Left</code>, <code>Tab.Right</code> или объект секции. У каждого метода одинаковая сигнатура <code>:AddX(config)</code>.</p>
+
+    <section id="label">
+      <h3><code>:AddLabel(name)</code></h3>
+      <p>Простая текстовая строка. Принимает строку напрямую, а не таблицу конфига.</p>
+      <pre><code>local lbl = Tab.Left:AddLabel("Версия скрипта: 1.2")
+lbl:Edit("Новый текст")</code></pre>
+    </section>
+
+    <section id="button">
+      <h3><code>:AddButton(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Button"</code></td></tr>
+        <tr><td><code>Callback</code></td><td>function</td><td>—</td></tr>
+      </table>
+      <pre><code>Tab.Left:AddButton({
+    Name = "Teleport to spawn",
+    Callback = function() print("tp!") end,
+})</code></pre>
+      <p>Дополнительно к общему API добавляет <code>Fire</code> — прямой вызов колбэка.</p>
+    </section>
+
+    <section id="toggle">
+      <h3><code>:AddToggle(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Toggle"</code></td></tr>
+        <tr><td><code>Default</code></td><td>boolean</td><td><code>false</code></td></tr>
+        <tr><td><code>Callback</code></td><td>function(value)</td><td>—</td></tr>
+      </table>
+      <p>Дополнительный метод: <code>toggle:AutomaticVisible({ Target = true, Elements = {...} })</code> —
+      показывает/скрывает переданные элементы в зависимости от значения тумблера, возвращает
+      <code>RBXScriptSignal</code> для отключения.</p>
+      <pre><code>local extra = Tab.Left:AddSlider({ Name = "FOV", Min = 60, Max = 120 })
+
+local t = Tab.Left:AddToggle({ Name = "Enable FOV changer", Default = false })
+t:AutomaticVisible({ Target = true, Elements = { extra } })</code></pre>
+    </section>
+
+    <section id="slider">
+      <h3><code>:AddSlider(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Slider"</code></td><td></td></tr>
+        <tr><td><code>Min</code> / <code>Max</code></td><td>number</td><td>0 / 100</td><td>Диапазон</td></tr>
+        <tr><td><code>Round</code></td><td>number</td><td>0</td><td>Знаков после запятой</td></tr>
+        <tr><td><code>Default</code></td><td>number</td><td><code>Min</code></td><td>Начальное значение</td></tr>
+        <tr><td><code>Type</code></td><td>string</td><td><code>""</code></td><td>Суффикс к значению (например, <code>"%"</code>, <code>"m"</code>)</td></tr>
+        <tr><td><code>ValueTexts</code></td><td>table&lt;number,string&gt;</td><td><code>{}</code></td><td>Подменяет отображаемый текст для конкретных значений</td></tr>
+        <tr><td><code>Callback</code></td><td>function(value)</td><td>—</td><td></td></tr>
+      </table>
+      <pre><code>Tab.Left:AddSlider({
+    Name = "Walk Speed", Min = 16, Max = 200, Round = 0, Default = 16, Type = "",
+    Callback = function(v) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v end,
+})</code></pre>
+    </section>
+
+    <section id="keybind">
+      <h3><code>:AddKeybind(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Keybind"</code></td></tr>
+        <tr><td><code>Default</code></td><td>string / Enum.KeyCode</td><td><code>"None"</code></td></tr>
+        <tr><td><code>Callback</code></td><td>function(key: string)</td><td>—</td></tr>
+      </table>
+      <p>Поддерживает клавиатуру и <code>MouseLeft</code>/<code>MouseRight</code>. Клик по полю запускает режим
+      ожидания следующего нажатия.</p>
+    </section>
+
+    <section id="textbox">
+      <h3><code>:AddTextbox(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"TextBox"</code></td><td></td></tr>
+        <tr><td><code>Default</code></td><td>string</td><td><code>""</code></td><td>Стартовый текст</td></tr>
+        <tr><td><code>Placeholder</code></td><td>string</td><td><code>"\t"</code></td><td>Плейсхолдер</td></tr>
+        <tr><td><code>Numeric</code></td><td>boolean</td><td><code>false</code></td><td>Разрешать только цифры и точку</td></tr>
+        <tr><td><code>Finished</code></td><td>boolean</td><td><code>false</code></td><td><code>true</code> — колбэк вызывается по потере фокуса, <code>false</code> — на каждое изменение</td></tr>
+        <tr><td><code>Callback</code></td><td>function(value)</td><td>—</td><td></td></tr>
+      </table>
+    </section>
+
+    <section id="colorpicker">
+      <h3><code>:AddColorPicker(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"ColorPicker"</code></td></tr>
+        <tr><td><code>Default</code></td><td>Color3</td><td><code>Color3.fromRGB(255,255,255)</code></td></tr>
+        <tr><td><code>Callback</code></td><td>function(color: Color3)</td><td>—</td></tr>
+      </table>
+      <p>Открывает общий на всё окно попап-пикер (HSV-колесо + полоса). В попапе есть кнопки
+      <em>Copy</em> / <em>Paste</em> для переноса цвета между разными color-picker'ами.</p>
+      <div class="note">Попап цветового пикера один на всё окно (<code>Airflow.Features</code>) — при открытии
+      одного пикера предыдущий закрывается автоматически.</div>
+    </section>
+
+    <section id="paragraph">
+      <h3><code>:AddParagraph(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Paragraph"</code></td></tr>
+        <tr><td><code>Content</code></td><td>string</td><td><code>nil</code></td></tr>
+      </table>
+      <p>Высота блока подстраивается автоматически. Методы: <code>:EditName(v)</code>, <code>:EditContent(v)</code> (вместо общего <code>:Edit</code>).</p>
+    </section>
+
+    <section id="dropdown">
+      <h3><code>:AddDropdown(config)</code></h3>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th><th>Описание</th></tr>
+        <tr><td><code>Name</code></td><td>string</td><td><code>"Dropdown"</code></td><td></td></tr>
+        <tr><td><code>Values</code></td><td>{string}</td><td><code>{}</code></td><td>Список вариантов</td></tr>
+        <tr><td><code>Default</code></td><td>string / {string} / {[string]=bool}</td><td><code>{}</code></td><td>Выбранное значение(я)</td></tr>
+        <tr><td><code>Multi</code></td><td>boolean</td><td><code>false</code></td><td>Множественный выбор</td></tr>
+        <tr><td><code>Callback</code></td><td>function(value)</td><td>—</td><td></td></tr>
+      </table>
+      <pre><code>Tab.Left:AddDropdown({
+    Name = "Target", Values = {"Nearest", "Lowest HP", "Random"},
+    Default = "Nearest", Multi = false,
+    Callback = function(v) print(v) end,
+})</code></pre>
+      <table>
+        <tr><th>Доп. метод</th><th>Описание</th></tr>
+        <tr><td><code>dropdown:SetValues(list)</code></td><td>Заменяет список вариантов (список пересобирается при следующем открытии)</td></tr>
+        <tr><td><code>dropdown:SetDefault(value)</code></td><td>Программно задать выбранное значение</td></tr>
+      </table>
+    </section>
+
+    <section id="common-api">
+      <h3>Общий API каждого элемента</h3>
+      <p>Кроме отдельных случаев (Label, Paragraph), каждый элемент возвращает объект со следующими методами:</p>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>:Edit(text)</code></td><td>Изменить подпись элемента</td></tr>
+        <tr><td><code>:SetValue(value)</code></td><td>Программно задать значение (кроме Label/Button/Paragraph)</td></tr>
+        <tr><td><code>:Visible(bool)</code></td><td>Показать/скрыть элемент</td></tr>
+        <tr><td><code>:Destroy()</code></td><td>Удалить элемент</td></tr>
+      </table>
+    </section>
+
+    <section id="configs">
+      <h2>FileManager — сохранение и загрузка конфигов</h2>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>Airflow.FileManager:WriteConfig(Window, path)</code></td><td>Сохраняет текущие значения всех элементов в файл (<code>writefile</code>), возвращает JSON-строку</td></tr>
+        <tr><td><code>Airflow.FileManager:GetConfig(Window)</code></td><td>Возвращает JSON-строку без записи на диск</td></tr>
+        <tr><td><code>Airflow.FileManager:LoadConfig(Window, path, VERSION)</code></td><td>Читает файл и применяет значения к окну</td></tr>
+        <tr><td><code>Airflow.FileManager:LoadConfigFromString(Window, str, VERSION)</code></td><td>То же, но из готовой JSON-строки</td></tr>
+        <tr><td><code>Airflow.FileManager:GetVersion(path)</code></td><td>Считывает поле <code>VERSION</code> из файла конфига</td></tr>
+      </table>
+      <div class="note"><code>VERSION</code>, переданный в <code>LoadConfig</code>, должен совпадать с версией,
+      указанной при <code>Init</code> — иначе загрузка отклоняется с предупреждением в консоль.</div>
+      <pre><code>Airflow.FileManager:WriteConfig(Window, "myconfig.json")
+-- ...
+Airflow.FileManager:LoadConfig(Window, "myconfig.json", "1.0")</code></pre>
+    </section>
+
+    <section id="notify">
+      <h2>Уведомления — Airflow:Notify(config)</h2>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>По умолчанию</th></tr>
+        <tr><td><code>Title</code></td><td>string</td><td><code>"Notification"</code></td></tr>
+        <tr><td><code>Content</code></td><td>string</td><td><code>""</code></td></tr>
+        <tr><td><code>Duration</code></td><td>number | boolean</td><td>5</td></tr>
+      </table>
+      <p>Если <code>Duration</code> — <code>boolean</code>, уведомление не скрывается автоматически и возвращает
+      объект управления:</p>
+      <pre><code>local n = Airflow:Notify({ Title = "Загрузка", Content = "0%", Duration = true })
+n:SetContent("50%")
+-- позже:
+n:Close()</code></pre>
+    </section>
+
+    <section id="drawlist">
+      <h2>Airflow:DrawList(config) <span class="badge">отдельное окно ключ-значение</span></h2>
+      <p>Компактное перетаскиваемое окошко (например, для watermark/статистики), не связанное с основным окном.</p>
+      <table>
+        <tr><th>Поле</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td><code>"keybinds"</code></td></tr>
+        <tr><td><code>Icon</code></td><td><code>"keyboard"</code></td></tr>
+      </table>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>List:AddFrame({ Key, Value })</code></td><td>Добавляет строку «ключ — значение», возвращает объект с <code>:SetKey()</code>, <code>:SetValue()</code>, <code>:Visible()</code></td></tr>
+        <tr><td><code>List:Visible(bool)</code></td><td>Показать/скрыть всё окно</td></tr>
+      </table>
+      <pre><code>local Watermark = Airflow:DrawList({ Name = "Info", Icon = "activity" })
+local fps = Watermark:AddFrame({ Key = "FPS", Value = "60" })
+fps:SetValue("144")</code></pre>
+    </section>
+
+    <section id="drawloader">
+      <h2>Airflow:DrawLoader(loader_config) <span class="badge">мульти-игровой лоадер</span></h2>
+      <p>Экран выбора игры и версии загрузки — типичный паттерн «loader hub» для чит-скриптов.</p>
+      <table>
+        <tr><th>Поле</th><th>По умолчанию</th></tr>
+        <tr><td><code>Name</code></td><td><code>"airflow"</code></td></tr>
+        <tr><td><code>Icon</code></td><td>стандартный логотип</td></tr>
+        <tr><td><code>Highlight</code></td><td>акцентный цвет</td></tr>
+      </table>
+      <pre><code>local Loader = Airflow:DrawLoader({ Name = "My Hub" })
+
+local CS = Loader:DrawGame({
+    Name = "Counter Blox",
+    Logo = "rbxassetid://0",
+    Description = "Welcome!",
+})
+
+CS:SetStatus(CS.Enum.StatusTypes.Online)
+
+CS:DrawVersion({
+    Name = "Live",
+    Status = CS.Enum.StatusTypes.Online,
+    LastUpdate = os.time(),
+    LoadScript = 'loadstring(game:HttpGet("URL"))()',
+})</code></pre>
+      <table>
+        <tr><th>Статус (Enum.StatusTypes)</th><th>Цвет</th></tr>
+        <tr><td><code>Online</code></td><td>зелёный</td></tr>
+        <tr><td><code>Updating</code></td><td>жёлтый</td></tr>
+        <tr><td><code>NotUpdate</code></td><td>красный</td></tr>
+        <tr><td><code>Outdate</code></td><td>красновато-розовый</td></tr>
+        <tr><td><code>Unknow</code></td><td>красный, текст «???»</td></tr>
+      </table>
+      <p><code>LoadScript</code> может быть строкой Lua-кода (выполняется через <code>loadstring</code>) либо
+      напрямую функцией. При успешной загрузке лоадер закрывается и уничтожается.</p>
+    </section>
+
+    <section id="icons">
+      <h2>Иконки (Lucide)</h2>
+      <p>Библиотека включает ~700 иконок из набора Lucide, загруженных как <code>rbxassetid</code>.</p>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>Airflow:GetIcon(name)</code></td><td>Вернуть asset id по имени (с префиксом <code>lucide-</code> или без)</td></tr>
+        <tr><td><code>Airflow:SetIcon(name, assetId)</code></td><td>Добавить/переопределить свою иконку</td></tr>
+        <tr><td><code>Airflow:LoadAssets()</code></td><td>Предзагрузить все иконки через <code>ContentProvider:Preload</code></td></tr>
+      </table>
+      <pre><code>Icon.Image = Airflow:GetIcon("home")       -- lucide-home
+Icon.Image = Airflow:GetIcon("lucide-trophy")</code></pre>
+    </section>
+
+    <section id="misc">
+      <h2>Служебные функции</h2>
+      <table>
+        <tr><th>Метод</th><th>Описание</th></tr>
+        <tr><td><code>Airflow:IsMobile()</code></td><td>true, если <code>UserInputService.TouchEnabled</code></td></tr>
+        <tr><td><code>Airflow:Hover(frame)</code></td><td>Навешивает стандартную анимацию наведения (серый ↔ светло-серый фон)</td></tr>
+        <tr><td><code>Airflow:CreateAnimation(instance, time, style, props)</code></td><td>Обёртка над <code>TweenService:Create</code>, сразу играет твин</td></tr>
+        <tr><td><code>Airflow:Blur(frame)</code></td><td>Создаёт эффект размытия фона позади элемента (через <code>DepthOfFieldEffect</code>)</td></tr>
+        <tr><td><code>Airflow:Rounding(num, decimals)</code></td><td>Округление числа</td></tr>
+        <tr><td><code>Airflow:RandomString()</code></td><td>Случайная строка для имён инстансов (маскировка от detection-скриптов)</td></tr>
+      </table>
+    </section>
+
+    <footer>
+      Сгенерировано по исходному коду Airflow UI (автор 4lpaca, MIT License). Документация покрывает публичный API — внутренние детали анимаций и вёрстки опущены.
+    </footer>
+  </main>
+</div>
+</body>
+</html>
